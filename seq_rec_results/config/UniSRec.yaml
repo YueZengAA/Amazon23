@@ -1,0 +1,46 @@
+n_layers: 2
+n_heads: 2
+hidden_size: 300
+inner_size: 256
+hidden_dropout_prob: 0.5
+attn_dropout_prob: 0.5
+hidden_act: 'gelu'
+layer_norm_eps: 1e-12
+initializer_range: 0.02
+loss_type: 'CE'
+
+# Fine-tuning objective (inductive_ft/transductive_ft)
+# - ce: full-softmax cross entropy over all items
+# - inbatch: in-batch negatives (retrieval-oriented)
+ft_loss: ce
+inbatch_mask_same_item: true
+
+# transductive_ft only: freeze ID-based item embedding
+freeze_item_embedding: False
+freeze_item_embedding_init: keep  # keep | zero
+
+item_drop_ratio: 0.2
+item_drop_coefficient: 0.9
+lambda: 1e-3
+
+plm_suffix: blair768.feature
+train_stage: inductive_ft  # pretrain / inductive_ft / transductive_ft
+plm_size: 768
+adaptor_dropout_prob: 0.2
+adaptor_layers: [768,300]
+temperature: 0.07
+n_exps: 8
+# Image embedding stream (optional).
+# Set img_plm_suffix + img_plm_size; file must exist under the dataset processed dir.
+# n_img_exps: number of image experts added to MoE (0 = disabled).
+# When disabled the model degrades to original single-stream MoE.
+img_plm_suffix: vit_img768.feature
+img_plm_size: 768
+n_img_exps: 4
+
+# Review embedding stream (optional).
+# Set review_plm_suffix + review_plm_size; file must exist under the dataset processed dir.
+# n_review_exps: number of review experts added to MoE (0 = disabled).
+review_plm_suffix: review_bert.feature
+review_plm_size: 768
+n_review_exps: 0
